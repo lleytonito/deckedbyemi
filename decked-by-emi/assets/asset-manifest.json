@@ -1,0 +1,262 @@
+{
+  "notes": [
+    "Original pulled assets are kept in assets/.",
+    "Browser-safe renamed copies live in assets/home/.",
+    "JPEG copies in assets/home/ have EXIF/GPS/comment metadata stripped.",
+    "Use this manifest as the durable source-to-semantic-name map for homepage work."
+  ],
+  "assets": [
+    {
+      "source": "77923288726__1F6EF63D-BE9A-4D1F-8970-DDFA0FC38B5D.heic",
+      "web": "home/deck-wall-three-boards-01.jpg",
+      "category": "deck-only",
+      "description": "three boards on wall"
+    },
+    {
+      "source": "IMG_2669.heic.heif",
+      "web": "home/deck-packaging-wrapped-boards-01.jpg",
+      "category": "deck-only",
+      "description": "boards wrapped up in packaging"
+    },
+    {
+      "source": "IMG_3020.HEIC",
+      "web": "home/deck-wall-four-boards.jpg",
+      "category": "deck-only",
+      "description": "four boards leaning against wall"
+    },
+    {
+      "source": "IMG_3895 - Ayerim Estrella Rodriguez.jpeg",
+      "web": "home/deck-wall-leaning-boards.jpg",
+      "category": "deck-only",
+      "description": "boards leaning against wall"
+    },
+    {
+      "source": "IMG_5419.HEIC",
+      "web": "home/deck-wall-single-board.jpg",
+      "category": "deck-only",
+      "description": "board on wall"
+    },
+    {
+      "source": "IMG_5451.heic.heif",
+      "web": "home/deck-wall-three-boards-02.jpg",
+      "category": "deck-only",
+      "description": "three boards"
+    },
+    {
+      "source": "IMG_5583.HEIC",
+      "web": "home/deck-packaging-wrapped-boards-02.jpg",
+      "category": "deck-only",
+      "description": "boards wrapped in packaging"
+    },
+    {
+      "source": "IMG_6268.HEIC",
+      "web": "home/deck-packaging-wrapped-boards-03.jpg",
+      "category": "deck-only",
+      "description": "boards wrapped in packaging"
+    },
+    {
+      "source": "IMG_6286.HEIC",
+      "web": "home/deck-packaging-wrapped-boards-04.jpg",
+      "category": "deck-only",
+      "description": "boards wrapped in packaging"
+    },
+    {
+      "source": "IMG_7448.HEIC",
+      "web": "home/deck-table-deckedbyemi-board.jpg",
+      "category": "deck-only",
+      "description": "boards on table, deckedbyemi board"
+    },
+    {
+      "source": "IMG_7452.HEIC",
+      "web": "home/deck-wall-two-boards.jpg",
+      "category": "deck-only",
+      "description": "two boards"
+    },
+    {
+      "source": "IMG_7622.HEIC",
+      "web": "home/deck-wall-three-boards-03.jpg",
+      "category": "deck-only",
+      "description": "three boards"
+    },
+    {
+      "source": "Tezza-9832.jpg",
+      "web": "home/deck-wall-three-boards-tezza.jpg",
+      "category": "deck-only",
+      "description": "three boards on wall"
+    },
+    {
+      "source": "2A74E4C6-4C9C-46E5-9680-6B29BE61610E.JPG",
+      "web": "home/deck-wall-purses-board.jpg",
+      "category": "deck-only",
+      "description": "board on wall over purses on wall"
+    },
+    {
+      "source": "D9D0DBE6-04E4-47C6-83ED-8274D7E656A9.jpg",
+      "web": "home/deck-detail-partial-board.jpg",
+      "category": "deck-only",
+      "description": "part of a board"
+    },
+    {
+      "source": "IMG_4810.JPG",
+      "web": "home/person-deck-back-01.jpg",
+      "category": "deck-with-person",
+      "description": "girl holding deck over her back"
+    },
+    {
+      "source": "IMG_4755.JPG",
+      "web": "home/person-deck-back-02.jpg",
+      "category": "deck-with-person",
+      "description": "other girl holding deck over back"
+    },
+    {
+      "source": "IMG_4789.jpg",
+      "web": "home/person-deck-back-03.jpg",
+      "category": "deck-with-person",
+      "description": "girl holding deck behind her"
+    },
+    {
+      "source": "IMG_4825.jpg",
+      "web": "home/person-deck-front-01.jpg",
+      "category": "deck-with-person",
+      "description": "girl holding deck in front of her"
+    },
+    {
+      "source": "IMG_4837.jpg",
+      "web": "home/person-two-girls-with-decks.jpg",
+      "category": "deck-with-person",
+      "description": "two girls holding decks"
+    },
+    {
+      "source": "IMG_2859.jpg",
+      "web": "home/mood-side-profile-girl.jpg",
+      "category": "mood",
+      "description": "aesthetic girl side profile"
+    },
+    {
+      "source": "IMG_2846.JPG",
+      "web": "home/mood-fur-coat-girl.jpg",
+      "category": "mood",
+      "description": "aesthetic girl fur coat"
+    },
+    {
+      "source": "IMG_4081.jpg",
+      "web": "home/mood-mini-collage-clippings.jpg",
+      "category": "mood",
+      "description": "mini collage of girl and clippings"
+    },
+    {
+      "source": "IMG_5016.jpg",
+      "web": "home/mood-matcha-girl.jpg",
+      "category": "mood",
+      "description": "girl holding matcha"
+    },
+    {
+      "source": "IMG_5610.JPG",
+      "web": "home/mood-coffee-girl.jpg",
+      "category": "mood",
+      "description": "girl drinking coffee"
+    },
+    {
+      "source": "IMG_5614.JPG",
+      "web": "home/mood-fit-pic-girl.jpg",
+      "category": "mood",
+      "description": "girl fit pic"
+    },
+    {
+      "source": "IMG_5626.jpg",
+      "web": "home/mood-phone-purse-girl.jpg",
+      "category": "mood",
+      "description": "girl no face holding phone with purse"
+    },
+    {
+      "source": "IMG_6770.JPG",
+      "web": "home/mood-canon-camera-selfie.jpg",
+      "category": "mood",
+      "description": "selfie in a canon cam"
+    },
+    {
+      "source": "IMG_7335.JPG",
+      "web": "home/mood-phone-aesthetic.jpg",
+      "category": "mood",
+      "description": "phone aesthetic"
+    },
+    {
+      "source": "IMG_8662.JPG",
+      "web": "home/mood-latte-art.jpg",
+      "category": "mood",
+      "description": "latte art"
+    },
+    {
+      "source": "logo1.png",
+      "web": "home/logo-primary.png",
+      "category": "brand",
+      "description": "transparent logo"
+    },
+    {
+      "source": "logo2.jpg",
+      "web": "home/logo-primary-flat.jpg",
+      "category": "brand",
+      "description": "flat logo"
+    },
+    {
+      "source": "22e53e_7ce192b539bc4ccfa676553133f07a78~mv2.jpg",
+      "web": "home/brand-wide-wordmark.jpg",
+      "category": "brand",
+      "description": "wide brand wordmark or banner pulled from Wix"
+    },
+    {
+      "source": "66E0D7F3-BAF0-453C-B2A2-AE0B97084FB1.jpg",
+      "web": "home/unclassified-instagram-square-01.jpg",
+      "category": "unclassified",
+      "description": "not yet classified"
+    },
+    {
+      "source": "IMG_2830.JPG",
+      "web": "home/unclassified-img-2830.jpg",
+      "category": "unclassified",
+      "description": "not yet classified"
+    },
+    {
+      "source": "IMG_2845.JPG",
+      "web": "home/unclassified-img-2845.jpg",
+      "category": "unclassified",
+      "description": "not yet classified"
+    },
+    {
+      "source": "IMG_3893 - Ayerim Estrella Rodriguez.jpeg",
+      "web": "home/unclassified-img-3893.jpg",
+      "category": "unclassified",
+      "description": "not yet classified"
+    },
+    {
+      "source": "IMG_4813.JPG",
+      "web": "home/unclassified-img-4813.jpg",
+      "category": "unclassified",
+      "description": "not yet classified"
+    },
+    {
+      "source": "IMG_5438.HEIC",
+      "web": "home/unclassified-img-5438.jpg",
+      "category": "unclassified",
+      "description": "not yet classified; converted from HEIC"
+    },
+    {
+      "source": "IMG_5622.JPG",
+      "web": "home/unclassified-img-5622.jpg",
+      "category": "unclassified",
+      "description": "not yet classified"
+    },
+    {
+      "source": "IMG_6825.jpg",
+      "web": "home/unclassified-img-6825.jpg",
+      "category": "unclassified",
+      "description": "not yet classified"
+    },
+    {
+      "source": "IMG_8510.JPG",
+      "web": "home/unclassified-img-8510.jpg",
+      "category": "unclassified",
+      "description": "not yet classified"
+    }
+  ]
+}
