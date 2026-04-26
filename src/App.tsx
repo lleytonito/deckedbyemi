@@ -3,9 +3,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { ShoppingBag, X, ChevronRight, ArrowLeft, Menu, Instagram, Mail, ArrowUpRight } from 'lucide-react';
+import { ShoppingBag, X, ChevronRight, ArrowLeft, Menu, Instagram, Mail, ArrowUpRight, ChevronLeft } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useRef } from 'react';
 
 // --- Types ---
 
@@ -359,7 +359,7 @@ const ProductCard = ({ product, onAddToCart, onOpenProduct }: { product: Product
           {product.name}
         </button>
         <p className="text-[10px] uppercase tracking-widest text-gray-400 font-medium italic">{product.collection}</p>
-        <p className="text-xs text-gray-500 leading-5 mt-3 max-w-xs">{product.description}</p>
+        <p className="hidden sm:block text-xs text-gray-500 leading-5 mt-3 max-w-xs">{product.description}</p>
       </div>
       <span className="text-[10px] font-mono">${product.price}</span>
     </div>
@@ -480,6 +480,10 @@ export default function App() {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [selectedCollection, setSelectedCollection] = useState('all');
   const [selectedProductId, setSelectedProductId] = useState(PRODUCTS[0].id);
+  const [productImageIndex, setProductImageIndex] = useState(0);
+  const [homeHeroIndex, setHomeHeroIndex] = useState(0);
+  const productSwipeStartX = useRef<number | null>(null);
+  const homeSwipeStartX = useRef<number | null>(null);
 
   const cartCount = useMemo(() => cartItems.reduce((sum, item) => sum + item.quantity, 0), [cartItems]);
 
@@ -519,6 +523,7 @@ export default function App() {
 
   const openProduct = (product: Product) => {
     setSelectedProductId(product.id);
+    setProductImageIndex(0);
     setPage('product');
     window.scrollTo(0, 0);
   };
@@ -530,61 +535,217 @@ export default function App() {
       square: 'aspect-square',
       feature: 'aspect-[3/4]',
     };
+    const mobileHeroTiles = [HOME_GALLERY[2], HOME_GALLERY[1], HOME_GALLERY[4], HOME_GALLERY[13]];
+    const activeHomeTile = mobileHeroTiles[homeHeroIndex] ?? mobileHeroTiles[0];
+    const showHomeHero = (nextIndex: number) => {
+      setHomeHeroIndex((nextIndex + mobileHeroTiles.length) % mobileHeroTiles.length);
+    };
+    const handleHomeSwipeEnd = (clientX: number) => {
+      if (homeSwipeStartX.current === null) return;
+      const delta = clientX - homeSwipeStartX.current;
+      homeSwipeStartX.current = null;
+      if (Math.abs(delta) < 38) return;
+      showHomeHero(homeHeroIndex + (delta < 0 ? 1 : -1));
+    };
 
     return (
       <div className="pt-20">
-        <section className="px-4 sm:px-6 pt-8 pb-16 md:pt-14 md:pb-24">
-          <div className="max-w-[1500px] mx-auto grid grid-cols-1 lg:grid-cols-[340px_minmax(0,1fr)] gap-8 lg:gap-12 items-start">
+        <section className="px-4 sm:px-6 pt-5 pb-12 md:pt-14 md:pb-24">
+          <div className="max-w-[1500px] mx-auto grid grid-cols-1 lg:grid-cols-[340px_minmax(0,1fr)] gap-6 lg:gap-12 items-start">
             <motion.div
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
-              className="lg:sticky lg:top-28 space-y-8"
+              className="lg:sticky lg:top-28"
             >
-              <div className="space-y-6">
-                <img
-                  src={homeAsset('logo-primary.png')}
-                  alt="Decked by Emi"
-                  className="w-40 sm:w-48 h-auto"
-                />
-                <div className="space-y-4">
+              <div className="sm:hidden flex flex-col gap-3">
+                <div
+                  className="relative h-[34svh] min-h-[220px] max-h-[360px] overflow-hidden bg-brand-muted touch-pan-y select-none"
+                  onTouchStart={event => { homeSwipeStartX.current = event.touches[0].clientX; }}
+                  onTouchEnd={event => handleHomeSwipeEnd(event.changedTouches[0].clientX)}
+                  onPointerDown={event => { homeSwipeStartX.current = event.clientX; }}
+                  onPointerUp={event => handleHomeSwipeEnd(event.clientX)}
+                >
+                  <AnimatePresence mode="wait">
+                    <motion.img
+                      key={activeHomeTile.file}
+                      src={homeAsset(activeHomeTile.file)}
+                      alt={activeHomeTile.title}
+                      initial={{ opacity: 0, x: 18 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: -18 }}
+                      transition={{ duration: 0.22 }}
+                      className="absolute inset-0 w-full h-full object-contain"
+                      draggable={false}
+                    />
+                  </AnimatePresence>
+                  {activeHomeTile.kind !== 'mood' && (
+                    <button
+                      type="button"
+                      onClick={() => openCollections()}
+                      className="absolute right-3 top-3 flex h-9 w-9 items-center justify-center bg-white/90 shadow-sm"
+                      aria-label={`Shop ${activeHomeTile.title}`}
+                    >
+                      <ArrowUpRight size={15} strokeWidth={1.7} />
+                    </button>
+                  )}
+                  <button
+                    type="button"
+                    onClick={() => showHomeHero(homeHeroIndex - 1)}
+                    className="absolute left-3 top-1/2 -translate-y-1/2 flex h-9 w-9 items-center justify-center bg-white/90 shadow-sm"
+                    aria-label="Previous homepage image"
+                  >
+                    <ChevronLeft size={16} strokeWidth={1.7} />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => showHomeHero(homeHeroIndex + 1)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 flex h-9 w-9 items-center justify-center bg-white/90 shadow-sm"
+                    aria-label="Next homepage image"
+                  >
+                    <ChevronRight size={16} strokeWidth={1.7} />
+                  </button>
+                </div>
+
+                <div className="flex justify-center gap-2">
+                  {mobileHeroTiles.map((tile, index) => (
+                    <button
+                      key={`home-dot-${tile.file}`}
+                      type="button"
+                      onClick={() => showHomeHero(index)}
+                      className={`h-1.5 rounded-full transition-all ${homeHeroIndex === index ? 'w-7 bg-black' : 'w-1.5 bg-black/25'}`}
+                      aria-label={`Show homepage image ${index + 1}`}
+                    />
+                  ))}
+                </div>
+
+                <div className="space-y-3">
                   <p className="text-[10px] uppercase tracking-[0.38em] font-bold text-gray-400">
                     online store
                   </p>
-                  <h1 className="font-serif italic text-5xl sm:text-6xl lg:text-7xl leading-[0.9] tracking-tight">
+                  <h1 className="font-serif italic text-[2.35rem] leading-[0.9] tracking-tight">
                     visual storytelling for skateboard decks.
                   </h1>
-                  <p className="text-sm leading-7 text-gray-500 max-w-sm">
-                    A student-founded creative brand focused on visual storytelling and custom design.
-                  </p>
+                </div>
+
+                <div className="grid grid-cols-2 gap-2">
+                  <button
+                    onClick={() => openCollections()}
+                    className="inline-flex items-center justify-center gap-2 bg-black text-white text-[9px] uppercase tracking-[0.18em] font-bold px-4 py-4 hover:opacity-80 transition-opacity"
+                  >
+                    shop the collection <ArrowUpRight size={14} strokeWidth={1.6} />
+                  </button>
+                  <button
+                    onClick={scrollToAbout}
+                    className="inline-flex items-center justify-center gap-2 border border-black text-[9px] uppercase tracking-[0.18em] font-bold px-4 py-4 hover:bg-brand-muted transition-colors"
+                  >
+                    about the brand <ArrowUpRight size={14} strokeWidth={1.6} />
+                  </button>
                 </div>
               </div>
 
-              <div className="flex flex-col sm:flex-row lg:flex-col gap-3">
-                <button
-                  onClick={() => openCollections()}
-                  className="inline-flex items-center justify-center gap-3 bg-black text-white text-[10px] uppercase tracking-[0.24em] font-bold px-7 py-4 hover:opacity-80 transition-opacity"
-                >
-                  shop the collection <ArrowUpRight size={14} strokeWidth={1.6} />
-                </button>
-                <button
-                  onClick={scrollToAbout}
-                  className="inline-flex items-center justify-center gap-3 border border-black text-[10px] uppercase tracking-[0.24em] font-bold px-7 py-4 hover:bg-brand-muted transition-colors"
-                >
-                  about the brand <ArrowUpRight size={14} strokeWidth={1.6} />
-                </button>
+              <div className="hidden sm:flex lg:hidden flex-col gap-5">
+                <div className="grid grid-cols-2 auto-rows-[minmax(180px,28vw)] gap-3">
+                  {mobileHeroTiles.map((tile, index) => {
+                    const isShopTile = tile.kind !== 'mood';
+                    return (
+                      <motion.button
+                        key={`tablet-hero-${tile.file}`}
+                        type="button"
+                        onClick={() => isShopTile && openCollections()}
+                        initial={{ opacity: 0, y: 12 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: index * 0.04 }}
+                        className={`group relative overflow-hidden bg-brand-muted text-left ${isShopTile ? 'cursor-pointer' : 'cursor-default'}`}
+                        aria-label={isShopTile ? `Shop ${tile.title}` : tile.title}
+                      >
+                        <img
+                          src={homeAsset(tile.file)}
+                          alt={tile.title}
+                          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+                        />
+                        {isShopTile && (
+                          <span className="absolute right-3 top-3 flex h-9 w-9 items-center justify-center bg-white/90 opacity-0 shadow-sm transition-opacity duration-300 group-hover:opacity-100">
+                            <ArrowUpRight size={15} strokeWidth={1.7} />
+                          </span>
+                        )}
+                      </motion.button>
+                    );
+                  })}
+                </div>
+
+                <div className="space-y-3">
+                  <p className="text-[10px] uppercase tracking-[0.38em] font-bold text-gray-400">
+                    online store
+                  </p>
+                  <h1 className="font-serif italic text-5xl md:text-6xl leading-[0.9] tracking-tight max-w-3xl">
+                    visual storytelling for skateboard decks.
+                  </h1>
+                </div>
+
+                <div className="grid grid-cols-2 gap-3">
+                  <button
+                    onClick={() => openCollections()}
+                    className="inline-flex items-center justify-center gap-3 bg-black text-white text-[10px] uppercase tracking-[0.22em] font-bold px-6 py-4 hover:opacity-80 transition-opacity"
+                  >
+                    shop the collection <ArrowUpRight size={14} strokeWidth={1.6} />
+                  </button>
+                  <button
+                    onClick={scrollToAbout}
+                    className="inline-flex items-center justify-center gap-3 border border-black text-[10px] uppercase tracking-[0.22em] font-bold px-6 py-4 hover:bg-brand-muted transition-colors"
+                  >
+                    about the brand <ArrowUpRight size={14} strokeWidth={1.6} />
+                  </button>
+                </div>
               </div>
 
-              <div className="border-y border-brand-accent py-5">
-                <p className="text-[10px] uppercase tracking-[0.28em] font-bold text-gray-400">
-                  new drops
-                </p>
-                <p className="mt-3 text-xs leading-6 text-gray-500">
-                  Browse the current collection and follow along as new deck designs go live.
-                </p>
+              <div className="hidden lg:block space-y-8">
+                <div className="space-y-6">
+                  <img
+                    src={homeAsset('logo-primary.png')}
+                    alt="Decked by Emi"
+                    className="w-48 h-auto"
+                  />
+
+                  <div className="space-y-4">
+                    <p className="text-[10px] uppercase tracking-[0.38em] font-bold text-gray-400">
+                      online store
+                    </p>
+                    <h1 className="font-serif italic text-7xl leading-[0.9] tracking-tight">
+                      visual storytelling for skateboard decks.
+                    </h1>
+                    <p className="text-sm leading-7 text-gray-500 max-w-sm">
+                      A student-founded creative brand focused on visual storytelling and custom design.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex flex-col gap-3">
+                  <button
+                    onClick={() => openCollections()}
+                    className="inline-flex items-center justify-center gap-3 bg-black text-white text-[10px] uppercase tracking-[0.24em] font-bold px-7 py-4 hover:opacity-80 transition-opacity"
+                  >
+                    shop the collection <ArrowUpRight size={14} strokeWidth={1.6} />
+                  </button>
+                  <button
+                    onClick={scrollToAbout}
+                    className="inline-flex items-center justify-center gap-3 border border-black text-[10px] uppercase tracking-[0.24em] font-bold px-7 py-4 hover:bg-brand-muted transition-colors"
+                  >
+                    about the brand <ArrowUpRight size={14} strokeWidth={1.6} />
+                  </button>
+                </div>
+
+                <div className="border-y border-brand-accent py-5">
+                  <p className="text-[10px] uppercase tracking-[0.28em] font-bold text-gray-400">
+                    new drops
+                  </p>
+                  <p className="mt-3 text-xs leading-6 text-gray-500">
+                    Browse the current collection and follow along as new deck designs go live.
+                  </p>
+                </div>
               </div>
             </motion.div>
 
-            <div className="columns-1 sm:columns-2 xl:columns-3 gap-4 [column-fill:_balance]">
+            <div className="hidden lg:block columns-2 xl:columns-3 gap-4 [column-fill:_balance]">
               {HOME_GALLERY.map((tile, index) => {
                 const isShopTile = tile.kind !== 'mood';
                 return (
@@ -703,21 +864,21 @@ export default function App() {
         initial={{ opacity: 0, y: 18 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-        className="pt-32 px-6 max-w-7xl mx-auto min-h-screen"
+        className="pt-24 sm:pt-32 px-4 sm:px-6 max-w-7xl mx-auto min-h-screen"
       >
         <motion.div
           initial={{ opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.05 }}
-          className="mb-16 grid grid-cols-1 lg:grid-cols-[0.8fr_1.2fr] gap-10 items-end"
+          className="mb-6 sm:mb-16 grid grid-cols-1 lg:grid-cols-[0.8fr_1.2fr] gap-3 sm:gap-10 items-end"
         >
           <div>
             <span className="text-[10px] uppercase tracking-[0.3em] font-bold text-gray-400">collections</span>
-            <h1 className="text-5xl md:text-7xl font-serif italic lowercase mt-3 leading-none">
+            <h1 className="text-4xl sm:text-5xl md:text-7xl font-serif italic lowercase mt-2 sm:mt-3 leading-none">
               collections
             </h1>
           </div>
-          <p className="text-sm leading-7 text-gray-500 max-w-2xl lg:justify-self-end">
+          <p className="hidden sm:block text-sm leading-7 text-gray-500 max-w-2xl lg:justify-self-end">
             Limited releases alongside core designs that stay available between drops.
           </p>
         </motion.div>
@@ -729,7 +890,7 @@ export default function App() {
             hidden: {},
             show: { transition: { staggerChildren: 0.08 } },
           }}
-          className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-20"
+          className="hidden lg:grid grid-cols-2 gap-4 mb-20"
         >
           {COLLECTIONS.map(collection => {
             const isActive = selectedCollection === collection.id;
@@ -772,19 +933,20 @@ export default function App() {
           })}
         </motion.div>
 
-        <div className="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-brand-accent pb-6">
+        <div className="mb-5 sm:mb-10 flex flex-col md:flex-row md:items-end justify-between gap-4 sm:gap-6 border-b border-brand-accent pb-5 sm:pb-6">
           <div>
             <span className="text-[10px] uppercase tracking-[0.3em] font-bold text-gray-400">
               {activeCollection ? activeCollection.label : 'all designs'}
             </span>
-            <h2 className="mt-2 text-4xl font-serif italic lowercase">
+            <h2 className="mt-2 text-3xl sm:text-4xl font-serif italic lowercase">
               {activeCollection ? activeCollection.name : 'all collections'}
             </h2>
           </div>
-          <div className="flex gap-4 overflow-x-auto no-scrollbar text-[10px] uppercase tracking-[0.22em] font-bold">
+          <div className="flex items-center gap-2 overflow-x-auto no-scrollbar text-[10px] uppercase tracking-[0.2em] font-bold">
+            <span className="hidden sm:inline text-gray-400 whitespace-nowrap">filter by</span>
             <button
               onClick={() => setSelectedCollection('all')}
-              className={`whitespace-nowrap border-b pb-2 ${selectedCollection === 'all' ? 'border-black text-black' : 'border-transparent text-gray-400 hover:text-black'}`}
+              className={`whitespace-nowrap px-3 py-2 transition-colors ${selectedCollection === 'all' ? 'bg-black text-white' : 'bg-brand-muted text-gray-500 hover:text-black'}`}
             >
               all
             </button>
@@ -792,7 +954,7 @@ export default function App() {
               <button
                 key={collection.id}
                 onClick={() => setSelectedCollection(collection.id)}
-                className={`whitespace-nowrap border-b pb-2 ${selectedCollection === collection.id ? 'border-black text-black' : 'border-transparent text-gray-400 hover:text-black'}`}
+                className={`whitespace-nowrap px-3 py-2 transition-colors ${selectedCollection === collection.id ? 'bg-black text-white' : 'bg-brand-muted text-gray-500 hover:text-black'}`}
               >
                 {collection.name}
               </button>
@@ -805,27 +967,27 @@ export default function App() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.35 }}
-          className={`grid grid-cols-1 gap-12 mb-32 ${visibleProducts.length > 1 ? 'md:grid-cols-2 lg:grid-cols-3' : 'lg:grid-cols-[0.72fr_1fr] items-start'}`}
+          className={`grid grid-cols-2 gap-x-4 gap-y-10 sm:gap-12 mb-24 sm:mb-32 ${visibleProducts.length > 1 ? 'md:grid-cols-2 lg:grid-cols-3' : 'lg:grid-cols-[0.72fr_1fr] items-start'}`}
         >
-          <div className={visibleProducts.length === 1 ? 'max-w-md' : ''}>
+          <div className={visibleProducts.length === 1 ? 'col-span-1 max-w-md' : ''}>
             {visibleProducts[0] && (
               <ProductCard product={visibleProducts[0]} onAddToCart={addToCart} onOpenProduct={openProduct} />
             )}
           </div>
           {visibleProducts.length === 1 && (
-            <div className="border border-brand-accent p-8 md:p-12 min-h-[420px] flex flex-col justify-between">
-              <div className="space-y-6">
+            <div className="col-span-1 border border-brand-accent p-4 sm:p-8 md:p-12 min-h-0 sm:min-h-[420px] flex flex-col justify-between">
+              <div className="space-y-3 sm:space-y-6">
                 <span className="text-[10px] uppercase tracking-[0.3em] font-bold text-gray-400">drop note</span>
-                <h3 className="font-serif italic text-5xl leading-none">
+                <h3 className="font-serif italic text-3xl sm:text-5xl leading-none">
                   limited time
                 </h3>
-                <p className="text-sm leading-7 text-gray-500 max-w-xl">
+                <p className="hidden sm:block text-sm leading-7 text-gray-500 max-w-xl">
                   A limited release for the first drop, available for a set window or while inventory lasts.
                 </p>
               </div>
               <button
                 onClick={() => setSelectedCollection('all')}
-                className="mt-10 inline-flex w-fit items-center gap-3 border-b border-black pb-2 text-[10px] uppercase tracking-[0.24em] font-bold"
+                className="mt-6 sm:mt-10 inline-flex w-fit items-center gap-2 sm:gap-3 border-b border-black pb-2 text-[9px] sm:text-[10px] uppercase tracking-[0.18em] sm:tracking-[0.24em] font-bold"
               >
                 view the full edit <ArrowUpRight size={14} strokeWidth={1.7} />
               </button>
@@ -855,33 +1017,101 @@ export default function App() {
           product.id === 'single-statement' ? homeAsset('deck-wall-two-boards.jpg') : homeAsset('deck-wall-purses-board.jpg'),
           product.id === 'single-statement' ? homeAsset('person-deck-back-01.jpg') : homeAsset('deck-wall-two-boards.jpg'),
         ];
+    const activeProductImage = detailImages[productImageIndex] ?? detailImages[0];
+    const showProductImage = (nextIndex: number) => {
+      setProductImageIndex((nextIndex + detailImages.length) % detailImages.length);
+    };
+    const handleProductSwipeEnd = (clientX: number) => {
+      if (productSwipeStartX.current === null) return;
+      const delta = clientX - productSwipeStartX.current;
+      productSwipeStartX.current = null;
+      if (Math.abs(delta) < 38) return;
+      showProductImage(productImageIndex + (delta < 0 ? 1 : -1));
+    };
 
     return (
-      <div className="pt-28 px-6 pb-24 max-w-7xl mx-auto min-h-screen">
+      <div className="pt-24 sm:pt-28 px-4 sm:px-6 pb-24 max-w-7xl mx-auto min-h-screen">
         <button
           onClick={() => openCollections(product.collection)}
-          className="flex items-center gap-2 text-[10px] uppercase tracking-widest text-gray-400 hover:text-black mb-10"
+          className="flex items-center gap-2 text-[10px] uppercase tracking-widest text-gray-400 hover:text-black mb-6 sm:mb-10"
         >
           <ArrowLeft size={14} /> back to {product.collection}
         </button>
 
         <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-10 lg:gap-16 items-start">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="md:col-span-2 aspect-[4/5] bg-brand-muted overflow-hidden">
-              <img src={detailImages[0]} alt={product.name} className="w-full h-full object-cover" />
+          <div className="grid grid-cols-1 lg:grid-cols-[84px_minmax(0,1fr)] gap-4">
+            <div className="hidden lg:flex flex-col gap-3">
+              {detailImages.map((image, index) => (
+                <button
+                  key={`thumb-${image}`}
+                  type="button"
+                  onClick={() => showProductImage(index)}
+                  className={`aspect-[3/4] border bg-white p-1 transition-all ${productImageIndex === index ? 'border-black' : 'border-brand-accent opacity-65 hover:opacity-100'}`}
+                  aria-label={`View product image ${index + 1}`}
+                >
+                  <img src={image} alt="" className="w-full h-full object-contain" />
+                </button>
+              ))}
             </div>
-            {detailImages.slice(1).map((image, index) => (
-              <div key={image} className="aspect-square bg-brand-muted overflow-hidden">
-                <img src={image} alt={`${product.name} detail ${index + 1}`} className="w-full h-full object-cover" />
+
+            <div>
+              <div
+                className="relative aspect-[4/3] overflow-hidden border border-brand-accent bg-white touch-pan-y select-none sm:aspect-[4/5]"
+                onTouchStart={event => { productSwipeStartX.current = event.touches[0].clientX; }}
+                onTouchEnd={event => handleProductSwipeEnd(event.changedTouches[0].clientX)}
+                onPointerDown={event => { productSwipeStartX.current = event.clientX; }}
+                onPointerUp={event => handleProductSwipeEnd(event.clientX)}
+              >
+                <AnimatePresence mode="wait">
+                  <motion.img
+                    key={activeProductImage}
+                    src={activeProductImage}
+                    alt={`${product.name} image ${productImageIndex + 1}`}
+                    initial={{ opacity: 0, x: 16 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -16 }}
+                    transition={{ duration: 0.22 }}
+                    className="absolute inset-0 w-full h-full object-contain"
+                    draggable={false}
+                  />
+                </AnimatePresence>
+                <button
+                  type="button"
+                  onClick={() => showProductImage(productImageIndex - 1)}
+                  className="absolute left-3 top-1/2 -translate-y-1/2 flex h-10 w-10 items-center justify-center bg-white/90 shadow-sm"
+                  aria-label="Previous product image"
+                >
+                  <ChevronLeft size={17} strokeWidth={1.7} />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => showProductImage(productImageIndex + 1)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 flex h-10 w-10 items-center justify-center bg-white/90 shadow-sm"
+                  aria-label="Next product image"
+                >
+                  <ChevronRight size={17} strokeWidth={1.7} />
+                </button>
               </div>
-            ))}
+
+              <div className="mt-3 flex justify-center gap-2 lg:hidden">
+                {detailImages.map((image, index) => (
+                  <button
+                    key={`mobile-dot-${image}`}
+                    type="button"
+                    onClick={() => showProductImage(index)}
+                    className={`h-1.5 rounded-full transition-all ${productImageIndex === index ? 'w-7 bg-black' : 'w-1.5 bg-black/25'}`}
+                    aria-label={`View product image ${index + 1}`}
+                  />
+                ))}
+              </div>
+            </div>
           </div>
 
-          <div className="lg:sticky lg:top-28 space-y-10">
-            <div className="space-y-5">
+          <div className="lg:sticky lg:top-28 space-y-7 sm:space-y-10">
+            <div className="space-y-4 sm:space-y-5">
               <p className="text-[10px] uppercase tracking-[0.3em] font-bold text-gray-400">{product.status}</p>
               <div className="flex items-start justify-between gap-6">
-                <h1 className="font-serif italic text-5xl md:text-7xl leading-none lowercase">{product.name}</h1>
+                <h1 className="font-serif italic text-4xl md:text-7xl leading-none lowercase">{product.name}</h1>
                 <span className="text-sm font-mono pt-2">${product.price}</span>
               </div>
               <p className="text-sm leading-7 text-gray-500">{product.description}</p>
