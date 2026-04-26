@@ -344,7 +344,7 @@ const ProductCard = ({ product, onAddToCart, onOpenProduct }: { product: Product
       </span>
       <button 
         onClick={(event) => { event.stopPropagation(); onAddToCart(product); }}
-        className="absolute bottom-6 left-1/2 -translate-x-1/2 bg-white text-black text-[10px] uppercase tracking-[0.2em] px-8 py-3 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-2 group-hover:translate-y-0 shadow-sm"
+        className="hidden sm:block absolute bottom-6 left-1/2 -translate-x-1/2 bg-white text-black text-[10px] uppercase tracking-[0.2em] px-8 py-3 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-2 group-hover:translate-y-0 shadow-sm"
       >
         quick add
       </button>
@@ -550,16 +550,16 @@ export default function App() {
 
     return (
       <div className="pt-20">
-        <section className="px-4 sm:px-6 pt-5 pb-12 md:pt-14 md:pb-24">
+        <section className="px-4 sm:px-6 pt-5 pb-0 sm:pb-12 md:pt-14 md:pb-24">
           <div className="max-w-[1500px] mx-auto grid grid-cols-1 lg:grid-cols-[340px_minmax(0,1fr)] gap-6 lg:gap-12 items-start">
             <motion.div
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               className="lg:sticky lg:top-28"
             >
-              <div className="sm:hidden flex flex-col gap-3">
+              <div className="sm:hidden min-h-[calc(100svh-6rem)] flex flex-col justify-between gap-4">
                 <div
-                  className="relative h-[34svh] min-h-[220px] max-h-[360px] overflow-hidden bg-brand-muted touch-pan-y select-none"
+                  className="relative h-[38svh] min-h-[230px] max-h-[360px] overflow-hidden touch-pan-y select-none"
                   onTouchStart={event => { homeSwipeStartX.current = event.touches[0].clientX; }}
                   onTouchEnd={event => handleHomeSwipeEnd(event.changedTouches[0].clientX)}
                   onPointerDown={event => { homeSwipeStartX.current = event.clientX; }}
@@ -574,72 +574,48 @@ export default function App() {
                       animate={{ opacity: 1, x: 0 }}
                       exit={{ opacity: 0, x: -18 }}
                       transition={{ duration: 0.22 }}
-                      className="absolute inset-0 w-full h-full object-contain"
+                      className="absolute inset-0 w-full h-full object-cover"
                       draggable={false}
                     />
                   </AnimatePresence>
-                  {activeHomeTile.kind !== 'mood' && (
+                </div>
+
+                <div className="space-y-4">
+                  <div className="flex justify-center gap-2">
+                    {mobileHeroTiles.map((tile, index) => (
+                      <button
+                        key={`home-dot-${tile.file}`}
+                        type="button"
+                        onClick={() => showHomeHero(index)}
+                        className={`h-1.5 rounded-full transition-all ${homeHeroIndex === index ? 'w-7 bg-black' : 'w-1.5 bg-black/25'}`}
+                        aria-label={`Show homepage image ${index + 1}`}
+                      />
+                    ))}
+                  </div>
+
+                  <div className="space-y-3">
+                    <p className="text-[10px] uppercase tracking-[0.38em] font-bold text-gray-400">
+                      online store
+                    </p>
+                    <h1 className="font-serif italic text-[2.15rem] leading-[0.9] tracking-tight">
+                      visual storytelling for skateboard decks.
+                    </h1>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-2">
                     <button
-                      type="button"
                       onClick={() => openCollections()}
-                      className="absolute right-3 top-3 flex h-9 w-9 items-center justify-center bg-white/90 shadow-sm"
-                      aria-label={`Shop ${activeHomeTile.title}`}
+                      className="inline-flex items-center justify-center gap-2 bg-black text-white text-[9px] uppercase tracking-[0.18em] font-bold px-4 py-3 hover:opacity-80 transition-opacity"
                     >
-                      <ArrowUpRight size={15} strokeWidth={1.7} />
+                      shop the collection <ArrowUpRight size={14} strokeWidth={1.6} />
                     </button>
-                  )}
-                  <button
-                    type="button"
-                    onClick={() => showHomeHero(homeHeroIndex - 1)}
-                    className="absolute left-3 top-1/2 -translate-y-1/2 flex h-9 w-9 items-center justify-center bg-white/90 shadow-sm"
-                    aria-label="Previous homepage image"
-                  >
-                    <ChevronLeft size={16} strokeWidth={1.7} />
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => showHomeHero(homeHeroIndex + 1)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 flex h-9 w-9 items-center justify-center bg-white/90 shadow-sm"
-                    aria-label="Next homepage image"
-                  >
-                    <ChevronRight size={16} strokeWidth={1.7} />
-                  </button>
-                </div>
-
-                <div className="flex justify-center gap-2">
-                  {mobileHeroTiles.map((tile, index) => (
                     <button
-                      key={`home-dot-${tile.file}`}
-                      type="button"
-                      onClick={() => showHomeHero(index)}
-                      className={`h-1.5 rounded-full transition-all ${homeHeroIndex === index ? 'w-7 bg-black' : 'w-1.5 bg-black/25'}`}
-                      aria-label={`Show homepage image ${index + 1}`}
-                    />
-                  ))}
-                </div>
-
-                <div className="space-y-3">
-                  <p className="text-[10px] uppercase tracking-[0.38em] font-bold text-gray-400">
-                    online store
-                  </p>
-                  <h1 className="font-serif italic text-[2.35rem] leading-[0.9] tracking-tight">
-                    visual storytelling for skateboard decks.
-                  </h1>
-                </div>
-
-                <div className="grid grid-cols-2 gap-2">
-                  <button
-                    onClick={() => openCollections()}
-                    className="inline-flex items-center justify-center gap-2 bg-black text-white text-[9px] uppercase tracking-[0.18em] font-bold px-4 py-4 hover:opacity-80 transition-opacity"
-                  >
-                    shop the collection <ArrowUpRight size={14} strokeWidth={1.6} />
-                  </button>
-                  <button
-                    onClick={scrollToAbout}
-                    className="inline-flex items-center justify-center gap-2 border border-black text-[9px] uppercase tracking-[0.18em] font-bold px-4 py-4 hover:bg-brand-muted transition-colors"
-                  >
-                    about the brand <ArrowUpRight size={14} strokeWidth={1.6} />
-                  </button>
+                      onClick={scrollToAbout}
+                      className="inline-flex items-center justify-center gap-2 border border-black text-[9px] uppercase tracking-[0.18em] font-bold px-4 py-3 hover:bg-brand-muted transition-colors"
+                    >
+                      about the brand <ArrowUpRight size={14} strokeWidth={1.6} />
+                    </button>
+                  </div>
                 </div>
               </div>
 
