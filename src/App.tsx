@@ -557,30 +557,30 @@ export default function App() {
               animate={{ opacity: 1, y: 0 }}
               className="lg:sticky lg:top-28"
             >
-              <div className="sm:hidden min-h-[calc(100svh-6rem)] flex flex-col justify-between gap-4">
-                <div
-                  className="relative h-[38svh] min-h-[230px] max-h-[360px] overflow-hidden touch-pan-y select-none"
-                  onTouchStart={event => { homeSwipeStartX.current = event.touches[0].clientX; }}
-                  onTouchEnd={event => handleHomeSwipeEnd(event.changedTouches[0].clientX)}
-                  onPointerDown={event => { homeSwipeStartX.current = event.clientX; }}
-                  onPointerUp={event => handleHomeSwipeEnd(event.clientX)}
-                >
-                  <AnimatePresence mode="wait">
-                    <motion.img
-                      key={activeHomeTile.file}
-                      src={homeAsset(activeHomeTile.file)}
-                      alt={activeHomeTile.title}
-                      initial={{ opacity: 0, x: 18 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      exit={{ opacity: 0, x: -18 }}
-                      transition={{ duration: 0.22 }}
-                      className="absolute inset-0 w-full h-full object-cover"
-                      draggable={false}
-                    />
-                  </AnimatePresence>
-                </div>
+              <div className="sm:hidden min-h-[calc(100svh-6rem)] flex flex-col gap-4">
+                <div className="space-y-3">
+                  <div
+                    className="relative h-[38svh] min-h-[230px] max-h-[360px] overflow-hidden touch-pan-y select-none"
+                    onTouchStart={event => { homeSwipeStartX.current = event.touches[0].clientX; }}
+                    onTouchEnd={event => handleHomeSwipeEnd(event.changedTouches[0].clientX)}
+                    onPointerDown={event => { homeSwipeStartX.current = event.clientX; }}
+                    onPointerUp={event => handleHomeSwipeEnd(event.clientX)}
+                  >
+                    <AnimatePresence mode="wait">
+                      <motion.img
+                        key={activeHomeTile.file}
+                        src={homeAsset(activeHomeTile.file)}
+                        alt={activeHomeTile.title}
+                        initial={{ opacity: 0, x: 18 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: -18 }}
+                        transition={{ duration: 0.22 }}
+                        className="absolute inset-0 w-full h-full object-cover"
+                        draggable={false}
+                      />
+                    </AnimatePresence>
+                  </div>
 
-                <div className="space-y-4">
                   <div className="flex justify-center gap-2">
                     {mobileHeroTiles.map((tile, index) => (
                       <button
@@ -592,7 +592,9 @@ export default function App() {
                       />
                     ))}
                   </div>
+                </div>
 
+                <div className="mt-auto space-y-5">
                   <div className="space-y-3">
                     <p className="text-[10px] uppercase tracking-[0.38em] font-bold text-gray-400">
                       online store
@@ -600,6 +602,9 @@ export default function App() {
                     <h1 className="font-serif italic text-[2.15rem] leading-[0.9] tracking-tight">
                       visual storytelling for skateboard decks.
                     </h1>
+                    <p className="text-sm leading-6 text-gray-500">
+                      A student-founded creative brand focused on visual storytelling and custom design.
+                    </p>
                   </div>
 
                   <div className="grid grid-cols-2 gap-2">
