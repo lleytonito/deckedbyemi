@@ -237,7 +237,7 @@ const Navbar = ({
             className="cursor-pointer"
             aria-label="Decked by Emi home"
           >
-            <img src={homeAsset('logo-primary.png')} alt="Decked by Emi" className="h-16 w-auto sm:h-20" />
+            <img src={homeAsset('logo-primary-transparent.png')} alt="Decked by Emi" className="h-7 w-auto sm:h-9" />
           </button>
         </div>
         
@@ -550,17 +550,52 @@ export default function App() {
 
     return (
       <div className="pt-20">
-        <section className="px-4 sm:px-6 pt-5 pb-0 sm:pb-12 md:pt-14 md:pb-24">
+        <section className="px-4 sm:px-6 pt-5 pb-6 sm:pb-12 md:pt-14 md:pb-24">
           <div className="max-w-[1500px] mx-auto grid grid-cols-1 lg:grid-cols-[340px_minmax(0,1fr)] gap-6 lg:gap-12 items-start">
             <motion.div
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               className="lg:sticky lg:top-28"
             >
-              <div className="sm:hidden min-h-[calc(100svh-6rem)] flex flex-col gap-4">
+              <div className="sm:hidden flex flex-col gap-6">
+              <img
+                src={homeAsset('logo-primary-transparent.png')}
+                alt="Decked by Emi"
+                className="w-[82%] max-w-[18rem] mx-auto h-auto"
+              />
+
+              <div className="space-y-5">
+                  <div className="space-y-3">
+                    <p className="text-[10px] uppercase tracking-[0.38em] font-bold text-gray-400">
+                      online store
+                    </p>
+                    <h1 className="font-serif italic text-[2.15rem] leading-[0.9] tracking-tight">
+                      visual storytelling for skateboard decks.
+                    </h1>
+                    <p className="text-sm leading-6 text-gray-500">
+                      A student-founded creative brand focused on visual storytelling and custom design.
+                    </p>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-2">
+                    <button
+                      onClick={() => openCollections()}
+                      className="inline-flex items-center justify-center gap-2 bg-black text-white text-[9px] uppercase tracking-[0.18em] font-bold px-4 py-3 hover:opacity-80 transition-opacity"
+                    >
+                      shop the collection <ArrowUpRight size={14} strokeWidth={1.6} />
+                    </button>
+                    <button
+                      onClick={scrollToAbout}
+                      className="inline-flex items-center justify-center gap-2 border border-black text-[9px] uppercase tracking-[0.18em] font-bold px-4 py-3 hover:bg-brand-muted transition-colors"
+                    >
+                      about the brand <ArrowUpRight size={14} strokeWidth={1.6} />
+                    </button>
+                  </div>
+                </div>
+
                 <div className="space-y-3">
                   <div
-                    className="relative h-[38svh] min-h-[230px] max-h-[360px] overflow-hidden touch-pan-y select-none"
+                    className="relative h-[36svh] min-h-[220px] max-h-[340px] overflow-hidden touch-pan-y select-none"
                     onTouchStart={event => { homeSwipeStartX.current = event.touches[0].clientX; }}
                     onTouchEnd={event => handleHomeSwipeEnd(event.changedTouches[0].clientX)}
                     onPointerDown={event => { homeSwipeStartX.current = event.clientX; }}
@@ -591,35 +626,6 @@ export default function App() {
                         aria-label={`Show homepage image ${index + 1}`}
                       />
                     ))}
-                  </div>
-                </div>
-
-                <div className="mt-auto space-y-5">
-                  <div className="space-y-3">
-                    <p className="text-[10px] uppercase tracking-[0.38em] font-bold text-gray-400">
-                      online store
-                    </p>
-                    <h1 className="font-serif italic text-[2.15rem] leading-[0.9] tracking-tight">
-                      visual storytelling for skateboard decks.
-                    </h1>
-                    <p className="text-sm leading-6 text-gray-500">
-                      A student-founded creative brand focused on visual storytelling and custom design.
-                    </p>
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-2">
-                    <button
-                      onClick={() => openCollections()}
-                      className="inline-flex items-center justify-center gap-2 bg-black text-white text-[9px] uppercase tracking-[0.18em] font-bold px-4 py-3 hover:opacity-80 transition-opacity"
-                    >
-                      shop the collection <ArrowUpRight size={14} strokeWidth={1.6} />
-                    </button>
-                    <button
-                      onClick={scrollToAbout}
-                      className="inline-flex items-center justify-center gap-2 border border-black text-[9px] uppercase tracking-[0.18em] font-bold px-4 py-3 hover:bg-brand-muted transition-colors"
-                    >
-                      about the brand <ArrowUpRight size={14} strokeWidth={1.6} />
-                    </button>
                   </div>
                 </div>
               </div>
@@ -682,9 +688,9 @@ export default function App() {
               <div className="hidden lg:block space-y-8">
                 <div className="space-y-6">
                   <img
-                    src={homeAsset('logo-primary.png')}
+                    src={homeAsset('logo-primary-transparent.png')}
                     alt="Decked by Emi"
-                    className="w-48 h-auto"
+                    className="w-80 h-auto"
                   />
 
                   <div className="space-y-4">
